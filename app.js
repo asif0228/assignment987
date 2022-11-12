@@ -38,14 +38,20 @@ app.set('view engine', 'ejs');
 
 // Show index file
 app.get('', (req, res) => {
-	res.render('index', {"username":"Folks"});
+	res.render('index', {});
 });
 
+// Snapshot of all stations at a specified time
+app.get('/stations', (req, res) => {
+	const result = db.getStations(req.query.at);
+	result
+	    .then(data => res.json({data : data}))
+	    .catch(err => console.log(err));
+});
 
-// Temporary call to see data from db
-app.get('/data', (req, res) => {
-	// DB test show something
-	const result = db.getAllData();
+// Snapshot of one station at a specific time
+app.get('/stations/:id', (req, res) => {
+	const result = db.getStationById(req.params.id,req.query.at);
 	result
 	    .then(data => res.json({data : data}))
 	    .catch(err => console.log(err));
@@ -63,11 +69,12 @@ app.listen(process.env.PORT, () => console.info(`Listening on port ${process.env
 
 
 // Define Schedule for running every hour
-schedule.scheduleJob("1 * * * *", () => { // second(optional) minute hour day_of_month month day_of_week
-	// console.log("Job ran @", new Date().toString());
-	const dataCollector = dataCollectorService.getDataCollectorServiceInstance();
-	dataCollector.startDataCollection(db);
-});
+// Uncomment below
+// schedule.scheduleJob("1 * * * *", () => { // second(optional) minute hour day_of_month month day_of_week
+// 	// console.log("Job ran @", new Date().toString());
+// 	const dataCollector = dataCollectorService.getDataCollectorServiceInstance();
+// 	dataCollector.startDataCollection(db);
+// });
 
 
 

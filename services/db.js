@@ -50,6 +50,7 @@ class DbService {
             console.log(error);
         }
     }
+
     async insertWeatherData(main,description,temp,pressure,humidity) {
         try {
         	// console.log(main);
@@ -93,22 +94,58 @@ class DbService {
         }
     }
 
-    async searchByName(name) {
+    async getStations(at) {
         try {
-            const response = await new Promise((resolve, reject) => {
-                const query = "SELECT * FROM names WHERE name = ?;";
+        	const response1 = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM bicycles WHERE create_time=?;";
 
-                connection.query(query, [name], (err, results) => {
+                connection.query(query, [at],(err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);
                 })
             });
+            const response2 = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM weather WHERE create_time=?;";
 
-            return response;
+                connection.query(query, [at],(err, results) => {
+                    if (err) reject(new Error(err.message));
+                    resolve(results);
+                })
+            });
+            // console.log(response);
+            return [response1,response2];
         } catch (error) {
             console.log(error);
+            return {};
         }
     }
+
+    async getStationById(id,at) {
+        try {
+        	const response1 = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM bicycles WHERE id=? AND create_time=?;";
+
+                connection.query(query, [id,at],(err, results) => {
+                    if (err) reject(new Error(err.message));
+                    resolve(results);
+                })
+            });
+            const response2 = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM weather WHERE create_time=?;";
+
+                connection.query(query, [at],(err, results) => {
+                    if (err) reject(new Error(err.message));
+                    resolve(results);
+                })
+            });
+            // console.log(response);
+            return [response1,response2];
+        } catch (error) {
+            console.log(error);
+            return {};
+        }
+    }
+
 }
 
 module.exports = DbService;
