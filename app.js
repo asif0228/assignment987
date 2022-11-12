@@ -69,12 +69,11 @@ app.listen(process.env.PORT, () => console.info(`Listening on port ${process.env
 
 
 // Define Schedule for running every hour
-// Uncomment below
-// schedule.scheduleJob("1 * * * *", () => { // second(optional) minute hour day_of_month month day_of_week
-// 	// console.log("Job ran @", new Date().toString());
-// 	const dataCollector = dataCollectorService.getDataCollectorServiceInstance();
-// 	dataCollector.startDataCollection(db);
-// });
+schedule.scheduleJob("1 * * * *", () => { // second(optional) minute hour day_of_month month day_of_week
+	// console.log("Job ran @", new Date().toString());
+	const dataCollector = dataCollectorService.getDataCollectorServiceInstance();
+	dataCollector.startDataCollection(db);
+});
 
 
 
