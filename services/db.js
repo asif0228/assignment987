@@ -50,64 +50,46 @@ class DbService {
             console.log(error);
         }
     }
-
-
-    async insertNewName(name) {
+    async insertWeatherData(main,description,temp,pressure,humidity) {
         try {
-            const dateAdded = new Date();
-            const insertId = await new Promise((resolve, reject) => {
-                const query = "INSERT INTO names (name, date_added) VALUES (?,?);";
+        	// console.log(main);
+        	// console.log(description);
+        	// console.log(temp);
+        	// console.log(pressure);
+            const create_time = new Date();
+            create_time.setMinutes(0);
+            create_time.setSeconds(0);
+            create_time.setMilliseconds(0);
+            const res = await new Promise((resolve, reject) => {
+                const query = "INSERT INTO weather (create_time, main, description, temp, pressure, humidity) VALUES (?,?,?,?,?,?);";
 
-                connection.query(query, [name, dateAdded] , (err, result) => {
+                connection.query(query, [create_time,main,description,temp,pressure,humidity] , (err, result) => {
                     if (err) reject(new Error(err.message));
-                    resolve(result.insertId);
+                    resolve("Success");
                 })
             });
-            return {
-                id : insertId,
-                name : name,
-                dateAdded : dateAdded
-            };
+            return {"messgae":"Success"};
         } catch (error) {
             console.log(error);
+            return {"messgae":"Failes"};
         }
     }
 
-    async deleteRowById(id) {
+    async insertBicycleData(result) {
         try {
-            id = parseInt(id, 10); 
-            const response = await new Promise((resolve, reject) => {
-                const query = "DELETE FROM names WHERE id = ?";
-    
-                connection.query(query, [id] , (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(result.affectedRows);
-                })
-            });
-    
-            return response === 1 ? true : false;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
+        	// console.log(result);            
+            const res = await new Promise((resolve, reject) => {
+                const query = "INSERT INTO bicycles (create_time,id,name,total_docks,docks_available,bikes_available) VALUES ?;";
 
-    async updateNameById(id, name) {
-        try {
-            id = parseInt(id, 10); 
-            const response = await new Promise((resolve, reject) => {
-                const query = "UPDATE names SET name = ? WHERE id = ?";
-    
-                connection.query(query, [name, id] , (err, result) => {
+                connection.query(query, [result] , (err, result) => {
                     if (err) reject(new Error(err.message));
-                    resolve(result.affectedRows);
+                    resolve("Success");
                 })
             });
-    
-            return response === 1 ? true : false;
+            return {"messgae":"Success"};
         } catch (error) {
             console.log(error);
-            return false;
+            return {"messgae":"Failed"};
         }
     }
 
